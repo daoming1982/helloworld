@@ -30,4 +30,4 @@ async function sendMessage() {
         console.error(e);
         outputDiv.innerText = "请求失败：Failed to fetch（可能是 Worker 未部署成功）";
     }
-}
+} 
