@@ -1,21 +1,26 @@
 async function sendMessage() {
-    const input = document.getElementById("input").value;
-    const output = document.getElementById("output");
+  const input = document.getElementById("input").value;
+  const outputDiv = document.getElementById("output");
 
-    output.innerHTML = "正在生成回答...";
+  outputDiv.innerText = "正在生成回答...";
 
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer YOUR_API_KEY"
-        },
-        body: JSON.stringify({
-            model: "gpt-4o-mini", 
-            messages: [{ role: "user", content: input }]
-        })
+  try {
+    const response = await fetch("https://solitary-sky-355e.daoming1982.workers.dev", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: input })
     });
 
-    const data = await res.json();
-    output.innerHTML = data.choices[0].message.content;
+    const result = await response.json();
+
+    // 取模型返回的内容
+    const reply = result.choices?.[0]?.message?.content || "（无返回内容）";
+
+    outputDiv.innerText = reply;
+
+  } catch (e) {
+    outputDiv.innerText = "请求失败：" + e.message;
+  }
 }
