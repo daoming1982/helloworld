@@ -1,26 +1,33 @@
 async function sendMessage() {
-  const input = document.getElementById("input").value;
-  const outputDiv = document.getElementById("output");
+    const input = document.getElementById("input").value;
+    const outputDiv = document.getElementById("output");
 
-  outputDiv.innerText = "正在生成回答...";
+    if (!input.trim()) {
+        outputDiv.innerText = "请输入内容！";
+        return;
+    }
 
-  try {
-    const response = await fetch("https://solitary-sky-355e.daoming1982.workers.dev", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message: input })
-    });
+    outputDiv.innerText = "正在生成回答...";
 
-    const result = await response.json();
+    try {
+        const response = await fetch("https://api.codex.love/api", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: input
+            })
+        });
 
-    // 取模型返回的内容
-    const reply = result.choices?.[0]?.message?.content || "（无返回内容）";
+        const data = await response.json();
 
-    outputDiv.innerText = reply;
+        const reply = data.reply || "（没有返回内容）";
 
-  } catch (e) {
-    outputDiv.innerText = "请求失败：" + e.message;
-  }
+        outputDiv.innerText = reply;
+
+    } catch (e) {
+        console.error(e);
+        outputDiv.innerText = "请求失败：Failed to fetch（可能是 Worker 未部署成功）";
+    }
 }
