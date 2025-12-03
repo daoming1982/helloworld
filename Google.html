@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Codex OpenAI Chat</title>
+  <title>Codex Google Gemini Chat + 日语翻译</title>
 
   <style>
     body {
@@ -50,34 +50,36 @@
 
 <body>
 
-<h1>OpenAI Chat</h1>
+<h1>Google Gemini Chat</h1>
 
 <select id="model">
-  <option value="gpt-4o-mini">OpenAI - gpt-4o-mini</option>
-  <option value="gpt-4o">OpenAI - gpt-4o</option>
-  <option value="chatgpt-4o-latest">OpenAI - chatgpt-4o-latest</option>
+  <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+  <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite</option>
+  <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
 </select>
 
+
 <textarea id="inputBox" placeholder="输入内容..."></textarea>
+
 <button onclick="send()">发送</button>
+<button onclick="translateToJP()">翻译为日语 🇯🇵</button>
 
 <div id="responseBox">回复内容会显示在这里...</div>
 
 <script>
 const API = "https://api.codex.love/";
 
-// 发送到 Worker → OpenAI
+/* -------------------------
+    1) Gemini 聊天功能
+--------------------------*/
 async function send() {
   const text = document.getElementById("inputBox").value.trim();
   const model = document.getElementById("model").value;
   const box = document.getElementById("responseBox");
 
-  if (!text) {
-    alert("请输入内容！");
-    return;
-  }
+  if (!text) return alert("请输入内容！");
 
-  box.textContent = "⏳ OpenAI 正在思考...";
+  box.textContent = "⏳ Gemini 正在思考...";
 
   try {
     const resp = await fetch(API, {
@@ -91,18 +93,61 @@ async function send() {
     });
 
     const data = await resp.json();
+    const reply = data?.reply?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    // OpenAI 标准格式
-    if (data.reply?.choices?.[0]?.message?.content) {
-      box.textContent = data.reply.choices[0].message.content;
-      return;
-    }
-
-    // 兜底显示原始 JSON
-    box.textContent = JSON.stringify(data, null, 2);
+    box.textContent = reply || JSON.stringify(data, null, 2);
 
   } catch (err) {
     box.textContent = "❌ 请求失败：\n" + err.message;
+  }
+}
+
+
+/* -------------------------
+    2) 日语翻译功能
+--------------------------*/
+async function translateToJP() {
+  const text = document.getElementById("inputBox").value.trim();
+  const model = document.getElementById("model").value;
+  const box = document.getElementById("responseBox");
+
+  if (!text) return alert("请输入内容！");
+
+  box.textContent = "⏳ Gemini 正在翻译（日语 + 片假名 + 罗马音）...";
+
+  try {
+    const prom = `
+请把下面的中文翻译成自然的日语，并补充：
+1）日语原文  
+2）片假名  
+3）罗马音  
+
+格式如下（不要加解释）：
+
+日语：...
+片假名：...
+罗马音：...
+
+原文：${text}
+`;
+
+    const resp = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "chat",
+        model: model,
+        message: prom
+      })
+    });
+
+    const data = await resp.json();
+    const reply = data?.reply?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    box.textContent = reply || JSON.stringify(data, null, 2);
+
+  } catch (err) {
+    box.textContent = "❌ 翻译失败：\n" + err.message;
   }
 }
 </script>

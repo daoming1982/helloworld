@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex 日语词典 - 音频优化版</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --primary: #e74c3c;
+    --primary-dark: #c0392b;
+    --secondary: #3498db;
+    --dark: #2c3e50;
+    --light: #ecf0f1;
+    --gray: #95a5a6;
+    --success: #2ecc71;
+    --warning: #f39c12;
+    --danger: #e74c3c;
+    --border-radius: 12px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: var(--dark);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+  }
+
+  .logo-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--dark);
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+  }
+
+  .subtitle {
+    color: var(--gray);
+    font-size: 1.1rem;
+  }
+
+  .main-card {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 30px;
+    margin-bottom: 30px;
+    transition: var(--transition);
+  }
+
+  .main-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: var(--dark);
+  }
+
+  .section-title i {
+    color: var(--primary);
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+
+  .model-selector {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .model-option {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .model-option label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+  }
+
+  select {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  select:focus {
+    border-color: var(--secondary);
+    outline: none;
+  }
+
+  textarea {
+    width: 100%;
+    padding: 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    min-height: 140px;
+    resize: vertical;
+    transition: var(--transition);
+    font-family: inherit;
+  }
+
+  textarea:focus {
+    border-color: var(--secondary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+  .btn {
+    padding: 16px 28px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: var(--transition);
+    flex: 1;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(231, 76, 60, 0.3);
+  }
+
+  .btn-secondary {
+    background: white;
+    color: var(--dark);
+    border: 2px solid #e0e0e0;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--secondary);
+    color: var(--secondary);
+  }
+
+  .result-section {
+    margin-top: 30px;
+  }
+
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .copy-btn {
+    background: var(--light);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: var(--transition);
+  }
+
+  .copy-btn:hover {
+    background: var(--secondary);
+    color: white;
+  }
+
+  .result-content {
+    background: #f9f9f9;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    min-height: 180px;
+    border: 1px solid #eee;
+  }
+
+  .result-item {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .result-item:last-child {
+    border-bottom: none;
+  }
+
+  .result-label {
+    display: inline-block;
+    background: var(--light);
+    padding: 6px 15px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+  }
+
+  .japanese-text {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 5px;
+  }
+
+  .katakana-text {
+    font-size: 1.4rem;
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .romaji-text {
+    font-size: 1.2rem;
+    color: var(--gray);
+    font-style: italic;
+  }
+
+  .audio-controls {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+  }
+
+  .audio-btn {
+    flex: 1;
+    min-width: 150px;
+    padding: 14px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 600;
+    transition: var(--transition);
+  }
+
+  .audio-btn:hover {
+    border-color: var(--secondary);
+    color: var(--secondary);
+    transform: translateY(-2px);
+  }
+
+  .audio-btn.active {
+    background: var(--secondary);
+    color: white;
+    border-color: var(--secondary);
+  }
+
+  .audio-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .audio-btn.disabled:hover {
+    border-color: #e0e0e0;
+    color: inherit;
+    transform: none;
+  }
+
+  .audio-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  audio {
+    width: 100%;
+    border-radius: var(--border-radius);
+  }
+
+  .speed-control {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: var(--border-radius);
+  }
+
+  .speed-label {
+    font-weight: 600;
+    color: var(--dark);
+  }
+
+  .speed-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 8px;
+    background: #ddd;
+    border-radius: 4px;
+    outline: none;
+  }
+
+  .speed-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .speed-value {
+    font-weight: 600;
+    color: var(--primary);
+    min-width: 40px;
+  }
+
+  .audio-source-selector {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .source-btn {
+    padding: 8px 16px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: var(--transition);
+  }
+
+  .source-btn:hover {
+    background: var(--light);
+  }
+
+  .source-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  .history-section {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 30px;
+  }
+
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .history-controls {
+    display: flex;
+    gap: 10px;
+  }
+
+  .history-btn {
+    padding: 10px 18px;
+    background: var(--light);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: var(--transition);
+  }
+
+  .history-btn:hover {
+    background: var(--secondary);
+    color: white;
+  }
+
+  .history-list {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+
+  .history-item {
+    background: #f9f9f9;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--primary);
+    transition: var(--transition);
+    cursor: pointer;
+  }
+
+  .history-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .history-input {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--dark);
+  }
+
+  .history-output {
+    color: var(--gray);
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+  }
+
+  .history-time {
+    font-size: 0.85rem;
+    color: var(--gray);
+    text-align: right;
+  }
+
+  .empty-history {
+    text-align: center;
+    padding: 40px;
+    color: var(--gray);
+  }
+
+  .empty-history i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #ddd;
+  }
+
+  .loader {
+    display: none;
+    text-align: center;
+    padding: 30px;
+  }
+
+  .loader.active {
+    display: block;
+  }
+
+  .spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--primary);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background: var(--success);
+    color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+    z-index: 1000;
+  }
+
+  .notification.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .notification.error {
+    background: var(--danger);
+  }
+
+  .notification.warning {
+    background: var(--warning);
+  }
+
+  .tts-test {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: var(--border-radius);
+    border: 1px solid #e9ecef;
+  }
+
+  .tts-test h4 {
+    margin-bottom: 10px;
+    color: var(--dark);
+  }
+
+  .tts-test-btn {
+    padding: 8px 16px;
+    background: var(--light);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    transition: var(--transition);
+  }
+
+  .tts-test-btn:hover {
+    background: var(--secondary);
+    color: white;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    color: var(--gray);
+    font-size: 0.9rem;
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: var(--gray);
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gray);
+  }
+
+  .status-dot.active {
+    background: var(--success);
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+
+  @media (max-width: 768px) {
+    .action-buttons {
+      flex-direction: column;
+    }
+    
+    .model-selector {
+      flex-direction: column;
+    }
+    
+    .audio-controls {
+      flex-direction: column;
+    }
+    
+    .audio-btn {
+      min-width: 100%;
+    }
+    
+    .history-header {
+      flex-direction: column;
+      gap: 15px;
+      align-items: flex-start;
+    }
+    
+    .history-controls {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-language logo-icon"></i>
+        <div>
+          <h1>Codex 日语词典</h1>
+          <p class="subtitle">智能中日英翻译 - 修复音频播放问题</p>
+        </div>
+      </div>
+      <div class="status-indicator">
+        <div class="status-dot active" id="connectionStatus"></div>
+        <span id="connectionText">系统正常</span>
+      </div>
+    </header>
+
+    <main class="main-card">
+      <div class="input-group">
+        <div class="model-selector">
+          <div class="model-option">
+            <label for="model"><i class="fas fa-robot"></i> 选择AI模型</label>
+            <select id="model">
+              <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+              <option value="gemini-2.0-flash" selected>Gemini 2.0 Flash</option>
+              <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite</option>
+            </select>
+          </div>
+          
+          <div class="model-option">
+            <label for="language"><i class="fas fa-globe"></i> 输入语言</label>
+            <select id="language">
+              <option value="auto" selected>自动检测</option>
+              <option value="zh">中文</option>
+              <option value="en">英文</option>
+              <option value="ja">日语</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="inputText" class="section-title">
+            <i class="fas fa-keyboard"></i>
+            <span>输入要翻译的内容</span>
+          </label>
+          <textarea id="inputText" placeholder="输入中文、英文或日语句子，例如：你好，今天天气怎么样？"></textarea>
+          
+          <div class="action-buttons">
+            <button id="translateBtn" class="btn btn-primary">
+              <i class="fas fa-language"></i>
+              翻译为日语
+            </button>
+            <button id="clearBtn" class="btn btn-secondary">
+              <i class="fas fa-broom"></i>
+              清空输入
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>正在翻译中，请稍候...</p>
+      </div>
+
+      <div class="result-section" id="resultSection" style="display: none;">
+        <div class="result-header">
+          <div class="section-title">
+            <i class="fas fa-flag"></i>
+            <span>翻译结果</span>
+          </div>
+          <button id="copyResultBtn" class="copy-btn">
+            <i class="far fa-copy"></i>
+            复制结果
+          </button>
+        </div>
+
+        <div class="result-content" id="resultContent">
+          <!-- 翻译结果将通过JavaScript动态生成 -->
+        </div>
+
+        <!-- TTS测试区域 -->
+        <div class="tts-test">
+          <h4><i class="fas fa-volume-up"></i> 音频测试</h4>
+          <div class="audio-source-selector" id="audioSourceSelector">
+            <button class="source-btn active" data-source="webSpeech">Web Speech API</button>
+            <button class="source-btn" data-source="external">外部TTS服务</button>
+          </div>
+          <div>
+            <button class="tts-test-btn" onclick="testTTS('こんにちは')">测试: こんにちは</button>
+            <button class="tts-test-btn" onclick="testTTS('ありがとう')">测试: ありがとう</button>
+            <button class="tts-test-btn" onclick="testTTS('すみません')">测试: すみません</button>
+          </div>
+        </div>
+
+        <!-- 速度控制 -->
+        <div class="speed-control">
+          <span class="speed-label">播放速度:</span>
+          <input type="range" min="0.5" max="2" step="0.1" value="1" class="speed-slider" id="speedSlider">
+          <span class="speed-value" id="speedValue">1.0x</span>
+        </div>
+
+        <div class="audio-controls">
+          <button id="playNormalBtn" class="audio-btn">
+            <i class="fas fa-play"></i>
+            播放
+          </button>
+          <button id="playSlowBtn" class="audio-btn">
+            <i class="fas fa-tachometer-alt"></i>
+            慢速
+          </button>
+          <button id="loopPlayBtn" class="audio-btn">
+            <i class="fas fa-redo"></i>
+            循环
+          </button>
+          <button id="stopPlayBtn" class="audio-btn">
+            <i class="fas fa-stop"></i>
+            停止
+          </button>
+        </div>
+
+        <div class="audio-container">
+          <div id="audioStatus">就绪</div>
+          <audio id="audioPlayer" controls></audio>
+        </div>
+      </div>
+    </main>
+
+    <section class="history-section">
+      <div class="history-header">
+        <div class="section-title">
+          <i class="fas fa-history"></i>
+          <span>翻译历史</span>
+        </div>
+        <div class="history-controls">
+          <button id="clearHistoryBtn" class="history-btn">
+            <i class="fas fa-trash"></i>
+            清空历史
+          </button>
+          <button id="exportHistoryBtn" class="history-btn">
+            <i class="fas fa-download"></i>
+            导出历史
+          </button>
+        </div>
+      </div>
+
+      <div class="history-list" id="historyList">
+        <!-- 历史记录将通过JavaScript动态生成 -->
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2023 Codex 日语词典 | 使用现代Web技术提供发音服务</p>
+      <p>本工具旨在帮助日语学习，音频使用浏览器内置语音合成</p>
+    </footer>
+  </div>
+
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle"></i>
+    <span>操作成功！</span>
+  </div>
+
+<script>
+// 全局状态管理
+const appState = {
+  currentText: "",
+  katakana: "",
+  japanese: "",
+  isLooping: false,
+  currentSpeed: 1.0,
+  audioSource: "webSpeech", // webSpeech 或 external
+  audioContext: null,
+  audioQueue: [],
+  isPlaying: false,
+  speechSynth: null,
+  voices: [],
+  japaneseVoice: null
+};
+
+// DOM元素
+const elements = {
+  inputText: document.getElementById('inputText'),
+  translateBtn: document.getElementById('translateBtn'),
+  clearBtn: document.getElementById('clearBtn'),
+  loader: document.getElementById('loader'),
+  resultSection: document.getElementById('resultSection'),
+  resultContent: document.getElementById('resultContent'),
+  copyResultBtn: document.getElementById('copyResultBtn'),
+  playNormalBtn: document.getElementById('playNormalBtn'),
+  playSlowBtn: document.getElementById('playSlowBtn'),
+  loopPlayBtn: document.getElementById('loopPlayBtn'),
+  stopPlayBtn: document.getElementById('stopPlayBtn'),
+  audioPlayer: document.getElementById('audioPlayer'),
+  speedSlider: document.getElementById('speedSlider'),
+  speedValue: document.getElementById('speedValue'),
+  audioStatus: document.getElementById('audioStatus'),
+  historyList: document.getElementById('historyList'),
+  clearHistoryBtn: document.getElementById('clearHistoryBtn'),
+  exportHistoryBtn: document.getElementById('exportHistoryBtn'),
+  notification: document.getElementById('notification'),
+  connectionStatus: document.getElementById('connectionStatus'),
+  connectionText: document.getElementById('connectionText')
+};
+
+// 初始化函数
+async function init() {
+  console.log("初始化应用...");
+  
+  // 初始化语音合成
+  await initSpeechSynthesis();
+  
+  // 设置事件监听器
+  setupEventListeners();
+  
+  // 加载历史记录
+  loadHistory();
+  
+  // 检查浏览器兼容性
+  checkBrowserCompatibility();
+  
+  console.log("应用初始化完成");
+}
+
+// 初始化语音合成
+async function initSpeechSynthesis() {
+  if ('speechSynthesis' in window) {
+    appState.speechSynth = window.speechSynthesis;
+    
+    // 等待语音列表加载
+    return new Promise((resolve) => {
+      let voices = speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        processVoices(voices);
+        resolve();
+      } else {
+        speechSynthesis.addEventListener('voiceschanged', () => {
+          voices = speechSynthesis.getVoices();
+          processVoices(voices);
+          resolve();
+        });
+      }
+    });
+  } else {
+    console.warn("浏览器不支持Web Speech API");
+    showNotification("您的浏览器不支持语音合成功能", "warning");
+    return Promise.resolve();
+  }
+}
+
+// 处理语音列表
+function processVoices(voices) {
+  appState.voices = voices;
+  
+  // 寻找日语语音
+  const japaneseVoices = voices.filter(voice => 
+    voice.lang.startsWith('ja') || voice.lang.includes('JP') || voice.lang.includes('Japanese')
+  );
+  
+  if (japaneseVoices.length > 0) {
+    // 优先选择女性声音
+    appState.japaneseVoice = japaneseVoices.find(v => v.name.includes('Female')) || japaneseVoices[0];
+    console.log("找到日语语音:", appState.japaneseVoice);
+  } else {
+    console.warn("未找到日语语音，使用默认语音");
+    appState.japaneseVoice = voices[0];
+  }
+}
+
+// 检查浏览器兼容性
+function checkBrowserCompatibility() {
+  const issues = [];
+  
+  if (!('speechSynthesis' in window)) {
+    issues.push("您的浏览器不支持Web Speech API，无法使用语音功能");
+  }
+  
+  if (!appState.japaneseVoice) {
+    issues.push("未找到日语语音包，发音可能不准确");
+  }
+  
+  if (issues.length > 0) {
+    console.warn("浏览器兼容性问题:", issues);
+    showNotification(issues.join("；"), "warning");
+  }
+}
+
+// 设置事件监听器
+function setupEventListeners() {
+  // 输入框自动调整高度
+  elements.inputText.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+  });
+  
+  // 翻译按钮
+  elements.translateBtn.addEventListener('click', translateText);
+  
+  // 清空按钮
+  elements.clearBtn.addEventListener('click', () => {
+    elements.inputText.value = '';
+    elements.inputText.style.height = 'auto';
+    elements.resultSection.style.display = 'none';
+    showNotification('输入已清空', 'success');
+  });
+  
+  // 复制按钮
+  elements.copyResultBtn.addEventListener('click', copyResult);
+  
+  // 音频按钮
+  elements.playNormalBtn.addEventListener('click', () => playAudio(1.0));
+  elements.playSlowBtn.addEventListener('click', () => playAudio(0.7));
+  elements.loopPlayBtn.addEventListener('click', toggleLoopPlay);
+  elements.stopPlayBtn.addEventListener('click', stopAudio);
+  
+  // 速度控制
+  elements.speedSlider.addEventListener('input', (e) => {
+    const speed = parseFloat(e.target.value);
+    appState.currentSpeed = speed;
+    elements.speedValue.textContent = `${speed.toFixed(1)}x`;
+  });
+  
+  // 音频源选择
+  document.querySelectorAll('.source-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.source-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      appState.audioSource = this.dataset.source;
+      showNotification(`已切换到${this.textContent}`, "success");
+    });
+  });
+  
+  // 历史记录按钮
+  elements.clearHistoryBtn.addEventListener('click', clearHistory);
+  elements.exportHistoryBtn.addEventListener('click', exportHistory);
+  
+  // 快捷键
+  elements.inputText.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey) {
+      e.preventDefault();
+      translateText();
+    }
+  });
+  
+  // 音频播放器事件
+  elements.audioPlayer.addEventListener('error', (e) => {
+    console.error("音频播放错误:", e);
+    updateAudioStatus("播放错误: " + elements.audioPlayer.error?.message || "未知错误");
+    showNotification("音频播放失败", "error");
+  });
+  
+  elements.audioPlayer.addEventListener('canplay', () => {
+    updateAudioStatus("就绪");
+  });
+  
+  elements.audioPlayer.addEventListener('play', () => {
+    updateAudioStatus("播放中");
+  });
+  
+  elements.audioPlayer.addEventListener('pause', () => {
+    updateAudioStatus("已暂停");
+  });
+  
+  elements.audioPlayer.addEventListener('ended', () => {
+    updateAudioStatus("播放结束");
+    if (appState.isLooping) {
+      setTimeout(() => {
+        if (appState.isLooping && appState.katakana) {
+          playAudio(appState.currentSpeed);
+        }
+      }, 500);
+    }
+  });
+}
+
+// 更新音频状态显示
+function updateAudioStatus(status) {
+  elements.audioStatus.textContent = status;
+  elements.audioStatus.style.color = 
+    status.includes("错误") ? "var(--danger)" : 
+    status === "播放中" ? "var(--success)" : "var(--dark)";
+}
+
+// 翻译文本
+async function translateText() {
+  const text = elements.inputText.value.trim();
+  if (!text) {
+    showNotification('请输入要翻译的内容', 'error');
+    return;
+  }
+  
+  appState.currentText = text;
+  const model = document.getElementById('model').value;
+  
+  // 显示加载器
+  elements.loader.classList.add('active');
+  elements.resultSection.style.display = 'none';
+  
+  try {
+    // 构建AI提示词
+    const prompt = `你是一个专业的日语教师。请将以下文本翻译成日语，并严格按照以下格式回复：
+
+原文：${text}
+
+输出格式（非常重要，请严格遵循）：
+1. 日语翻译：[日语译文，使用汉字和假名混合]
+2. 片假名：[纯片假名，只用于发音，不要包含汉字和标点]
+3. 罗马字：[罗马拼音]
+4. 发音要点：[简要的发音注意事项]
+
+示例：
+原文：你好
+日语翻译：こんにちは
+片假名：コンニチハ
+罗马字：Konnichiwa
+发音要点：注意"ん"的鼻音发音`;
+
+    const response = await fetchWithTimeout("https://api.codex.love/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "chat",
+        model: model,
+        message: prompt
+      })
+    }, 15000);
+    
+    if (!response.ok) {
+      throw new Error(`API请求失败: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    // 处理AI回复
+    let aiResponse = '';
+    if (data?.reply?.candidates?.[0]?.content?.parts?.[0]?.text) {
+      aiResponse = data.reply.candidates[0].content.parts[0].text;
+    } else if (data?.text) {
+      aiResponse = data.text;
+    } else {
+      throw new Error('无法解析AI回复');
+    }
+    
+    // 解析回复
+    const parsedResult = parseAIResponse(aiResponse, text);
+    
+    // 验证片假名
+    if (!isValidKatakana(parsedResult.katakana)) {
+      parsedResult.katakana = convertToKatakana(parsedResult.japanese);
+    }
+    
+    // 显示结果
+    displayTranslationResult(parsedResult);
+    
+    // 保存历史
+    saveToHistory(text, parsedResult);
+    
+    // 预加载音频
+    if (parsedResult.katakana) {
+      setTimeout(() => preloadAudio(parsedResult.katakana), 100);
+    }
+    
+  } catch (error) {
+    console.error('翻译错误:', error);
+    showNotification(`翻译失败: ${error.message}`, 'error');
+  } finally {
+    elements.loader.classList.remove('active');
+  }
+}
+
+// 带超时的fetch
+function fetchWithTimeout(url, options, timeout = 10000) {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('请求超时')), timeout)
+    )
+  ]);
+}
+
+// 解析AI回复
+function parseAIResponse(aiResponse, originalText) {
+  const result = {
+    original: originalText,
+    japanese: '',
+    katakana: '',
+    romaji: '',
+    pronunciation: ''
+  };
+  
+  const lines = aiResponse.split('\n').filter(line => line.trim());
+  
+  for (let line of lines) {
+    line = line.trim();
+    
+    if (line.startsWith('日语翻译') || line.startsWith('1.')) {
+      result.japanese = extractValue(line);
+    } else if (line.startsWith('片假名') || line.startsWith('2.')) {
+      result.katakana = extractValue(line);
+    } else if (line.startsWith('罗马字') || line.startsWith('3.')) {
+      result.romaji = extractValue(line);
+    } else if (line.startsWith('发音要点') || line.startsWith('4.')) {
+      result.pronunciation = extractValue(line);
+    }
+  }
+  
+  // 如果没找到片假名，尝试从日语翻译生成
+  if (!result.katakana && result.japanese) {
+    result.katakana = convertToKatakana(result.japanese);
+  }
+  
+  // 如果没找到日语翻译，使用第一行看起来像日语的内容
+  if (!result.japanese && lines.length > 0) {
+    for (let line of lines) {
+      if (/[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(line)) {
+        result.japanese = line;
+        break;
+      }
+    }
+  }
+  
+  return result;
+}
+
+// 提取冒号后的值
+function extractValue(line) {
+  const match = line.match(/[:：]\s*(.+)/);
+  return match ? match[1].trim() : line.replace(/^[0-9\.\s]+/, '').trim();
+}
+
+// 验证片假名
+function isValidKatakana(text) {
+  if (!text) return false;
+  // 检查是否主要为片假名
+  const katakanaRegex = /^[\u30A0-\u30FF\uFF65-\uFF9F\s]*$/;
+  return katakanaRegex.test(text.replace(/[^\u30A0-\u30FF\uFF65-\uFF9F\s]/g, ''));
+}
+
+// 转换为片假名
+function convertToKatakana(japaneseText) {
+  if (!japaneseText) return '';
+  
+  // 平假名转片假名映射
+  const hiraToKata = {
+    'あ': 'ア', 'い': 'イ', 'う': 'ウ', 'え': 'エ', 'お': 'オ',
+    'か': 'カ', 'き': 'キ', 'く': 'ク', 'け': 'ケ', 'こ': 'コ',
+    'さ': 'サ', 'し': 'シ', 'す': 'ス', 'せ': 'セ', 'そ': 'ソ',
+    'た': 'タ', 'ち': 'チ', 'つ': 'ツ', 'て': 'テ', 'と': 'ト',
+    'な': 'ナ', 'に': 'ニ', 'ぬ': 'ヌ', 'ね': 'ネ', 'の': 'ノ',
+    'は': 'ハ', 'ひ': 'ヒ', 'ふ': 'フ', 'へ': 'ヘ', 'ほ': 'ホ',
+    'ま': 'マ', 'み': 'ミ', 'む': 'ム', 'め': 'メ', 'も': 'モ',
+    'や': 'ヤ', 'ゆ': 'ユ', 'よ': 'ヨ',
+    'ら': 'ラ', 'り': 'リ', 'る': 'ル', 'れ': 'レ', 'ろ': 'ロ',
+    'わ': 'ワ', 'を': 'ヲ', 'ん': 'ン',
+    'が': 'ガ', 'ぎ': 'ギ', 'ぐ': 'グ', 'げ': 'ゲ', 'ご': 'ゴ',
+    'ざ': 'ザ', 'じ': 'ジ', 'ず': 'ズ', 'ぜ': 'ゼ', 'ぞ': 'ゾ',
+    'だ': 'ダ', 'ぢ': 'ヂ', 'づ': 'ヅ', 'で': 'デ', 'ど': 'ド',
+    'ば': 'バ', 'び': 'ビ', 'ぶ': 'ブ', 'べ': 'ベ', 'ぼ': 'ボ',
+    'ぱ': 'パ', 'ぴ': 'ピ', 'ぷ': 'プ', 'ぺ': 'ペ', 'ぽ': 'ポ',
+    'ゃ': 'ャ', 'ゅ': 'ュ', 'ょ': 'ョ', 'っ': 'ッ'
+  };
+  
+  let katakana = '';
+  for (let char of japaneseText) {
+    if (hiraToKata[char]) {
+      katakana += hiraToKata[char];
+    } else if (char >= 'ァ' && char <= 'ン') {
+      // 已经是片假名
+      katakana += char;
+    } else if (char >= 'ぁ' && char <= 'ゖ') {
+      // 小写平假名转大写片假名
+      const upperChar = String.fromCharCode(char.charCodeAt(0) - 96);
+      katakana += hiraToKata[upperChar] || char;
+    } else {
+      // 保留其他字符（可能是标点或空格）
+      katakana += /[。、？！，．・]/.test(char) ? '' : char;
+    }
+  }
+  
+  return katakana.trim();
+}
+
+// 显示翻译结果
+function displayTranslationResult(result) {
+  let html = `
+    <div class="result-item">
+      <span class="result-label">原文</span>
+      <p style="font-size: 1.2rem; margin-bottom: 15px;">${escapeHtml(result.original)}</p>
+    </div>
+    
+    <div class="result-item">
+      <span class="result-label">日语翻译</span>
+      <div class="japanese-text">${escapeHtml(result.japanese)}</div>
+    </div>
+    
+    <div class="result-item">
+      <span class="result-label">片假名（发音用）</span>
+      <div class="katakana-text">${escapeHtml(result.katakana)}</div>
+    </div>
+  `;
+  
+  if (result.romaji) {
+    html += `
+      <div class="result-item">
+        <span class="result-label">罗马字</span>
+        <div class="romaji-text">${escapeHtml(result.romaji)}</div>
+      </div>
+    `;
+  }
+  
+  if (result.pronunciation) {
+    html += `
+      <div class="result-item">
+        <span class="result-label">发音要点</span>
+        <p>${escapeHtml(result.pronunciation)}</p>
+      </div>
+    `;
+  }
+  
+  elements.resultContent.innerHTML = html;
+  elements.resultSection.style.display = 'block';
+  
+  // 更新状态
+  appState.japanese = result.japanese;
+  appState.katakana = result.katakana;
+  
+  // 滚动到结果
+  elements.resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  
+  showNotification('翻译完成', 'success');
+}
+
+// HTML转义
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// 预加载音频
+function preloadAudio(katakana) {
+  if (!katakana || !appState.speechSynth) return;
+  
+  // 对于Web Speech API，不需要预加载
+  console.log("音频预加载:", katakana);
+}
+
+// 播放音频
+async function playAudio(speed = 1.0) {
+  if (!appState.katakana) {
+    showNotification('没有可播放的内容', 'error');
+    return;
+  }
+  
+  // 停止当前播放
+  stopAudio();
+  
+  // 更新按钮状态
+  updateAudioButtons(true);
+  
+  try {
+    if (appState.audioSource === 'webSpeech') {
+      await playWithWebSpeech(appState.katakana, speed);
+    } else {
+      await playWithExternalTTS(appState.katakana, speed);
+    }
+  } catch (error) {
+    console.error('播放失败:', error);
+    updateAudioStatus("播放失败: " + error.message);
+    showNotification(`播放失败: ${error.message}`, 'error');
+    updateAudioButtons(false);
+  }
+}
+
+// 使用Web Speech API播放
+function playWithWebSpeech(text, speed = 1.0) {
+  return new Promise((resolve, reject) => {
+    if (!appState.speechSynth) {
+      reject(new Error('浏览器不支持语音合成'));
+      return;
+    }
+    
+    // 停止任何正在进行的语音
+    appState.speechSynth.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ja-JP';
+    utterance.rate = speed * appState.currentSpeed;
+    utterance.volume = 1;
+    utterance.pitch = 1;
+    
+    if (appState.japaneseVoice) {
+      utterance.voice = appState.japaneseVoice;
+    }
+    
+    utterance.onstart = () => {
+      appState.isPlaying = true;
+      updateAudioStatus("播放中");
+    };
+    
+    utterance.onend = () => {
+      appState.isPlaying = false;
+      updateAudioStatus("播放结束");
+      
+      // 如果是循环模式，重新播放
+      if (appState.isLooping && appState.katakana === text) {
+        setTimeout(() => {
+          if (appState.isLooping) {
+            playWithWebSpeech(text, speed);
+          }
+        }, 500);
+      }
+      
+      resolve();
+    };
+    
+    utterance.onerror = (event) => {
+      appState.isPlaying = false;
+      updateAudioStatus("播放错误");
+      reject(new Error(event.error));
+    };
+    
+    appState.speechSynth.speak(utterance);
+  });
+}
+
+// 使用外部TTS服务播放
+async function playWithExternalTTS(text, speed = 1.0) {
+  // 这里可以使用外部TTS服务，如Google TTS
+  // 由于API限制，这里使用备用方案
+  
+  // 如果没有外部TTS服务，回退到Web Speech API
+  if (!appState.speechSynth) {
+    throw new Error('无法访问TTS服务');
+  }
+  
+  return playWithWebSpeech(text, speed);
+}
+
+// TTS测试函数
+function testTTS(text) {
+  if (!appState.speechSynth) {
+    showNotification('浏览器不支持语音合成', 'error');
+    return;
+  }
+  
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'ja-JP';
+  utterance.rate = appState.currentSpeed;
+  
+  if (appState.japaneseVoice) {
+    utterance.voice = appState.japaneseVoice;
+  }
+  
+  appState.speechSynth.speak(utterance);
+  showNotification(`测试发音: ${text}`, 'success');
+}
+
+// 切换循环播放
+function toggleLoopPlay() {
+  if (!appState.katakana) {
+    showNotification('没有可播放的内容', 'error');
+    return;
+  }
+  
+  appState.isLooping = !appState.isLooping;
+  
+  if (appState.isLooping) {
+    elements.loopPlayBtn.classList.add('active');
+    elements.loopPlayBtn.innerHTML = '<i class="fas fa-stop"></i> 停止循环';
+    showNotification('开始循环播放', 'success');
+    
+    // 开始播放
+    if (!appState.isPlaying) {
+      playAudio(1.0);
+    }
+  } else {
+    elements.loopPlayBtn.classList.remove('active');
+    elements.loopPlayBtn.innerHTML = '<i class="fas fa-redo"></i> 循环';
+    showNotification('停止循环播放', 'warning');
+  }
+}
+
+// 停止音频播放
+function stopAudio() {
+  // 停止Web Speech
+  if (appState.speechSynth) {
+    appState.speechSynth.cancel();
+  }
+  
+  // 停止HTML5音频
+  if (elements.audioPlayer) {
+    elements.audioPlayer.pause();
+    elements.audioPlayer.currentTime = 0;
+  }
+  
+  appState.isPlaying = false;
+  appState.isLooping = false;
+  elements.loopPlayBtn.classList.remove('active');
+  elements.loopPlayBtn.innerHTML = '<i class="fas fa-redo"></i> 循环';
+  
+  updateAudioStatus("已停止");
+  updateAudioButtons(false);
+}
+
+// 更新音频按钮状态
+function updateAudioButtons(isPlaying) {
+  const playBtns = [elements.playNormalBtn, elements.playSlowBtn];
+  
+  if (isPlaying) {
+    playBtns.forEach(btn => {
+      btn.classList.add('disabled');
+      btn.disabled = true;
+    });
+  } else {
+    playBtns.forEach(btn => {
+      btn.classList.remove('disabled');
+      btn.disabled = false;
+    });
+  }
+}
+
+// 复制结果
+function copyResult() {
+  const textToCopy = elements.resultContent.innerText;
+  
+  navigator.clipboard.writeText(textToCopy)
+    .then(() => {
+      showNotification('翻译结果已复制到剪贴板');
+    })
+    .catch(err => {
+      console.error('复制失败:', err);
+      showNotification('复制失败，请手动选择复制', 'error');
+    });
+}
+
+// 保存到历史记录
+function saveToHistory(original, result) {
+  let history = JSON.parse(localStorage.getItem('codexJPHistory') || '[]');
+  
+  const historyItem = {
+    id: Date.now(),
+    original: original,
+    result: result,
+    timestamp: new Date().toISOString(),
+    date: new Date().toLocaleString('zh-CN')
+  };
+  
+  history.unshift(historyItem);
+  
+  if (history.length > 100) {
+    history = history.slice(0, 100);
+  }
+  
+  localStorage.setItem('codexJPHistory', JSON.stringify(history));
+  loadHistory();
+}
+
+// 加载历史记录
+function loadHistory() {
+  const history = JSON.parse(localStorage.getItem('codexJPHistory') || '[]');
+  
+  if (history.length === 0) {
+    elements.historyList.innerHTML = `
+      <div class="empty-history">
+        <i class="fas fa-history"></i>
+        <p>暂无翻译历史</p>
+        <p style="font-size: 0.9rem; margin-top: 10px;">开始翻译后，您的记录将显示在这里</p>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  history.forEach(item => {
+    html += `
+      <div class="history-item" data-id="${item.id}">
+        <div class="history-input">${escapeHtml(item.original)}</div>
+        <div class="history-output">${escapeHtml(item.result.japanese || '翻译结果')}</div>
+        <div class="history-time">${escapeHtml(item.date)}</div>
+      </div>
+    `;
+  });
+  
+  elements.historyList.innerHTML = html;
+  
+  // 添加点击事件
+  document.querySelectorAll('.history-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const id = parseInt(item.getAttribute('data-id'));
+      loadHistoryItem(id);
+    });
+  });
+}
+
+// 加载历史记录项
+function loadHistoryItem(id) {
+  const history = JSON.parse(localStorage.getItem('codexJPHistory') || '[]');
+  const item = history.find(h => h.id === id);
+  
+  if (item) {
+    elements.inputText.value = item.original;
+    displayTranslationResult(item.result);
+    appState.katakana = item.result.katakana;
+    elements.resultSection.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showNotification('已加载历史记录');
+  }
+}
+
+// 清空历史记录
+function clearHistory() {
+  if (confirm('确定要清空所有历史记录吗？此操作不可撤销。')) {
+    localStorage.removeItem('codexJPHistory');
+    loadHistory();
+    showNotification('历史记录已清空');
+  }
+}
+
+// 导出历史记录
+function exportHistory() {
+  const history = JSON.parse(localStorage.getItem('codexJPHistory') || '[]');
+  
+  if (history.length === 0) {
+    showNotification('没有历史记录可导出', 'error');
+    return;
+  }
+  
+  const exportData = history.map(item => ({
+    时间: item.date,
+    原文: item.original,
+    日语翻译: item.result.japanese,
+    片假名: item.result.katakana,
+    罗马字: item.result.romaji
+  }));
+  
+  const jsonString = JSON.stringify(exportData, null, 2);
+  const blob = new Blob(['\ufeff' + jsonString], { type: 'application/json;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  
+  link.href = url;
+  link.download = `日语翻译历史_${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  showNotification('历史记录已导出为JSON文件');
+}
+
+// 显示通知
+function showNotification(message, type = 'success') {
+  const icon = elements.notification.querySelector('i');
+  const text = elements.notification.querySelector('span');
+  
+  text.textContent = message;
+  
+  elements.notification.className = 'notification';
+  if (type === 'error') {
+    elements.notification.classList.add('error');
+    icon.className = 'fas fa-exclamation-circle';
+  } else if (type === 'warning') {
+    elements.notification.classList.add('warning');
+    icon.className = 'fas fa-exclamation-triangle';
+  } else {
+    icon.className = 'fas fa-check-circle';
+  }
+  
+  elements.notification.classList.add('show');
+  
+  setTimeout(() => {
+    elements.notification.classList.remove('show');
+  }, 3000);
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

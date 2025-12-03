@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codex Love Dictionary</title>
+    <style>
+        /* 基础和响应式布局 (保持一致) */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px; 
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h3 {
+            color: #333; 
+            text-align: center;
+            margin-top: 0;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            resize: vertical;
+            font-size: 16px;
+        }
+        #sendBtn {
+            width: 100%;
+            padding: 12px;
+            background-color: #4285f4; 
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #sendBtn:hover:not(:disabled) { background-color: #3367d6; }
+        #sendBtn:disabled { background-color: #a0c3ff; cursor: not-allowed; }
+
+        /* 结果/状态区域 */
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #e8f0fe; 
+            min-height: 60px;
+        }
+        
+        /* 核心对齐容器：使用 Flexbox 实现三行文本的对齐 */
+        .translation-container {
+            display: flex;
+            flex-direction: column; /* 垂直堆叠三行 */
+            padding: 10px 0;
+            white-space: pre-wrap; /* 保持换行和空格 */
+        }
+
+        /* 每一行文本的通用样式 */
+        .translation-line {
+            line-height: 1.4;
+            padding: 2px 0;
+            text-align: left;
+            /* 强制等宽字体，有助于视觉对齐，尤其当Worker在每个词之间留有空格时 */
+            font-family: 'Courier New', 'Lucida Console', monospace, 'Hiragino Sans GB'; 
+        }
+
+        /* 1. 日语翻译 (主文本) */
+        #translationOutput {
+            font-size: 24px;
+            color: #333;
+            font-weight: bold; /* 加粗 */
+            font-family: 'Hiragino Sans GB', 'Meiryo', 'Yu Gothic', sans-serif; /* 使用非等宽字体，突出主要文字 */
+        }
+
+        /* 2. 罗马音 */
+        #romajiOutput {
+            font-size: 18px;
+            color: #1a73e8; /* 蓝色 */
+            font-style: italic; /* 斜体 */
+            font-weight: normal; 
+        }
+
+        /* 3. 片假名 */
+        #katakanaOutput {
+            font-size: 18px;
+            color: #0f9d58; /* 绿色 */
+            font-weight: 600; /* 中等加粗 */
+        }
+        
+        #statusMessage {
+            font-size: 14px;
+            color: #757575;
+            margin-top: 10px;
+        }
+        .error {
+            background-color: #fce8e6; 
+            color: #d93025; 
+            font-weight: bold;
+        }
+
+        /* 播放控制区域 (样式不变) */
+        .controls-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ccc;
+        }
+        #playBtn { 
+            padding: 8px 15px;
+            background-color: #fbbc05; 
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            flex-grow: 1;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        #playBtn:disabled { background-color: #fcd988; cursor: not-allowed; }
+        .speed-control, .loop-control { display: flex; align-items: center; }
+        .speed-control { margin-right: 10px; }
+        .speed-control label, .loop-control label { font-size: 14px; margin-right: 5px; color: #555; }
+        #speedSelect { padding: 5px; border-radius: 4px; border: 1px solid #ccc; }
+        #audioPlayer { width: 100%; margin-top: 15px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h3>Codex Love Dictionary</h3>
+        <p style="text-align: center; font-size: 14px; color: #757575;">中文 → 日语 语音翻译</p>
+        
+        <label for="inputText" style="font-weight: bold;">输入文本:</label>
+        <textarea id="inputText" placeholder="输入您想翻译的内容..."></textarea>
+        
+        <button id="sendBtn">翻译并生成语音</button>
+
+        <div class="result-box">
+            <div class="translation-container">
+                <div id="translationOutput" class="translation-line">翻译结果 (日语) 将显示在这里...</div>
+                
+                <div id="romajiOutput" class="translation-line"></div>
+                
+                <div id="katakanaOutput" class="translation-line"></div>
+            </div>
+            
+            <div id="statusMessage">等待输入...</div>
+        </div>
+        
+        <div class="controls-group">
+            <button id="playBtn" disabled>▶ 播放/复读</button>
+            
+            <div class="speed-control">
+                <label for="speedSelect">速度:</label>
+                <select id="speedSelect">
+                    <option value="0.75">慢 (0.75x)</option>
+                    <option value="1.0" selected>正常 (1.0x)</option>
+                    <option value="1.25">快 (1.25x)</option>
+                    <option value="1.5">更快 (1.5x)</option>
+                </select>
+            </div>
+            
+            <div class="loop-control">
+                <input type="checkbox" id="loopCheckbox">
+                <label for="loopCheckbox">循环播放</label>
+            </div>
+        </div>
+
+        <audio id="audioPlayer" controls></audio>
+    </div>
+
+<script>
+const API_URL = "https://voice.codex.love"; 
+const REPEAT_DELAY_MS = 3000; // 3秒复读间隔
+
+const inputTextarea = document.getElementById("inputText");
+const sendBtn = document.getElementById("sendBtn");
+const playBtn = document.getElementById("playBtn");
+const speedSelect = document.getElementById("speedSelect");
+const loopCheckbox = document.getElementById("loopCheckbox");
+
+const translationOutput = document.getElementById("translationOutput");
+const romajiOutput = document.getElementById("romajiOutput");
+const katakanaOutput = document.getElementById("katakanaOutput");
+
+const statusMessage = document.getElementById("statusMessage");
+const audioPlayer = document.getElementById("audioPlayer");
+
+let currentAudioData = null; 
+let repeatTimeout = null; 
+
+function updateStatus(message, isError = false) {
+    statusMessage.textContent = message;
+    statusMessage.style.color = isError ? '#d93025' : '#757575';
+    statusMessage.parentNode.className = isError ? "result-box error" : "result-box";
+}
+
+function updateControls(hasAudio) {
+    playBtn.disabled = !hasAudio;
+    audioPlayer.style.display = hasAudio ? 'block' : 'none';
+    playBtn.textContent = audioPlayer.paused ? '▶ 播放/复读' : '❚❚ 停止';
+}
+
+function resetUI() {
+    clearTimeout(repeatTimeout);
+    sendBtn.disabled = false;
+    translationOutput.textContent = "翻译结果 (日语) 将显示在这里...";
+    romajiOutput.textContent = "";
+    katakanaOutput.textContent = "";
+    currentAudioData = null;
+    audioPlayer.src = '';
+    audioPlayer.loop = false;
+    loopCheckbox.checked = false;
+    updateControls(false); 
+    updateStatus("等待输入...", false);
+}
+
+// 播放/复读 核心功能 (保持不变)
+function togglePlay() {
+    if (!currentAudioData) return;
+    clearTimeout(repeatTimeout); 
+
+    if (audioPlayer.paused || audioPlayer.currentTime === 0) {
+        audioPlayer.currentTime = 0; 
+        audioPlayer.play();
+        playBtn.textContent = '❚❚ 停止';
+        updateStatus("▶ 正在播放...");
+    } else {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+        playBtn.textContent = '▶ 播放/复读';
+        updateStatus("⏸ 已停止播放。");
+    }
+}
+
+// 监听音频播放结束 (保持不变)
+audioPlayer.addEventListener('ended', () => {
+    if (loopCheckbox.checked) {
+        updateStatus(`🔄 播放结束，等待 ${REPEAT_DELAY_MS / 1000} 秒后复读...`);
+        
+        repeatTimeout = setTimeout(() => {
+            if (loopCheckbox.checked) {
+                audioPlayer.currentTime = 0;
+                audioPlayer.play();
+                updateStatus("🔄 正在复读...");
+            }
+        }, REPEAT_DELAY_MS);
+    } else {
+        updateControls(true); 
+        updateStatus("播放结束。");
+    }
+});
+
+
+// 核心功能：发送 API 请求并获取音频 (保持不变)
+sendBtn.addEventListener("click", async () => {
+    const input = inputTextarea.value.trim();
+    if (!input) {
+        updateStatus("请输入内容！", true);
+        return;
+    }
+
+    sendBtn.disabled = true;
+    updateStatus("正在处理...", false);
+    translationOutput.textContent = "翻译中...";
+    romajiOutput.textContent = "";
+    katakanaOutput.textContent = "";
+    currentAudioData = null; 
+    updateControls(false); 
+    audioPlayer.pause();
+    
+    try {
+        const resp = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: input })
+        });
+
+        const data = await resp.json();
+        
+        if (!resp.ok || data.error) {
+            let errorMsg = `API 错误: ${data.error || '连接失败'}`;
+            if (data.status && data.status >= 400) { errorMsg += ` (错误代码: ${data.status})`; }
+            if (data.status === 403) { errorMsg += "\n🚨 错误诊断：请检查服务凭证限制。"; }
+            
+            translationOutput.textContent = "翻译失败。";
+            updateStatus(errorMsg, true);
+            return;
+        }
+
+        // 成功响应
+        const translation = data.translation || "未获取翻译结果";
+        const romaji = data.romaji || "";
+        const katakana = data.katakana || "";
+        currentAudioData = data.audio; 
+        
+        // 🚨 关键：直接将 Worker 返回的三个长字符串放入各自的 div 中
+        translationOutput.textContent = translation; 
+        romajiOutput.textContent = romaji;
+        katakanaOutput.textContent = katakana;
+        
+        if (currentAudioData) {
+            const audioSrc = 'data:audio/mp3;base64,' + currentAudioData;
+            audioPlayer.src = audioSrc;
+            
+            audioPlayer.currentTime = 0; 
+            audioPlayer.play(); 
+            
+            updateControls(true); 
+            updateStatus(`✅ 成功！音频正在播放。`);
+        } else {
+            updateStatus(`⚠️ 成功响应，但未返回音频数据。翻译结果: ${translation}`, true);
+            updateControls(false);
+        }
+
+    } catch (err) {
+        translationOutput.textContent = "网络连接失败。";
+        updateStatus(`❌ 网络错误：无法连接到 ${API_URL}。`, true);
+    } finally {
+        sendBtn.disabled = false;
+    }
+});
+
+// --- 其他事件监听器 (保持不变) ---
+playBtn.addEventListener('click', togglePlay);
+speedSelect.addEventListener('change', () => { audioPlayer.playbackRate = parseFloat(speedSelect.value); });
+loopCheckbox.addEventListener('change', () => {
+    audioPlayer.loop = false; 
+    if (loopCheckbox.checked && audioPlayer.paused && currentAudioData) { togglePlay(); }
+    updateStatus(loopCheckbox.checked ? "🔄 已开启 3 秒间隔循环。" : "▶ 循环播放已关闭。", false);
+});
+audioPlayer.addEventListener('play', () => { playBtn.textContent = '❚❚ 停止'; clearTimeout(repeatTimeout); });
+audioPlayer.addEventListener('pause', () => { playBtn.textContent = '▶ 播放/复读'; clearTimeout(repeatTimeout); });
+
+document.addEventListener("DOMContentLoaded", () => {
+    audioPlayer.playbackRate = parseFloat(speedSelect.value);
+    resetUI();
+});
+</script>
+
+</body>
+</html>
